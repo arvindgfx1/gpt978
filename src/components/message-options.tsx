@@ -23,6 +23,7 @@ const MessageOptions = ({ message, role }: Props) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [copied, setCopied] = useState<boolean>(false);
     const [liked, setLiked] = useState<boolean>(false);
+    const [disLiked, setDisLiked] = useState<boolean>(false);
     const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
 
     const handleCopy = () => {
@@ -39,6 +40,16 @@ const MessageOptions = ({ message, role }: Props) => {
             toast.success("Got it, thanks for letting us know");
         } else {
             setLiked(true);
+            toast.success("Thank you for your feedback");
+        }
+    };
+
+    const handleDisLike = ()=>{
+        if (disLiked) {
+            setDisLiked(false);
+            toast.success("Got it, thanks for letting us know");
+        } else {
+            setDisLiked(true);
             toast.success("Thank you for your feedback");
         }
     };
@@ -129,6 +140,24 @@ const MessageOptions = ({ message, role }: Props) => {
                             </TooltipTrigger>
                             <TooltipContent>
                                 Good response
+                            </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    onClick={handleDisLike}
+                                    className="size-8 rounded-lg"
+                                >
+                                    <ThumbsUpIcon className={cn(
+                                        "size-4 transition-colors duration-300",
+                                        disLiked ? "fill-foreground" : "text-muted-foreground"
+                                    )} />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Bad response
                             </TooltipContent>
                         </Tooltip>
                     </>
