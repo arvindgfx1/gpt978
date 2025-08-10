@@ -5,6 +5,7 @@
 Aether is your **AI-powered productivity hub**.  
 It can generate code with syntax highlights, to tables, images, and real-time search in chat history
 
+[Watch Demo](https://www.tella.tv/video/shreyass-video-6tsl)
 
 ## 🚀 Features
 
