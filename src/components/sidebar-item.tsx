@@ -1,15 +1,14 @@
-import Link from "next/link";
-import Container from "./global/container";
 import { Chat, deleteChat, updateChat } from "@/actions/chat";
-import { EllipsisVertical } from "lucide-react";
-import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
-import Icons from "./global/icons";
+import { EllipsisVertical } from "lucide-react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import Container from "./global/container";
+import Icons from "./global/icons";
+import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { useEnterSubmit } from "@/hooks";
 
 interface Props {
     chat?: Chat;
@@ -100,7 +99,7 @@ const SidebarItem = ({ chat, index }: Props) => {
                                     e.preventDefault();
                                     e.stopPropagation();
                                 }}
-                                className="text-muted-foreground invisible group-hover/id:visible h-5 px-1 border-none outline-none"
+                                className="text-muted-foreground invisible hover:bg-transparent group-hover/id:visible h-5 px-1 border-none outline-none"
                             >
                                 <EllipsisVertical className="size-4 data-[state=open]:opacity-100 data-[state=open]:visible" />
                             </Button>

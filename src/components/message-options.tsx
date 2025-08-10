@@ -4,7 +4,7 @@ import { Message } from "@/actions/chat";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, } from "@/components/ui/tooltip";
 import { useVoices } from '@/hooks';
 import { cn } from '@/utils';
-import { CheckIcon, ShareIcon, ThumbsUpIcon } from "lucide-react";
+import { CheckIcon, ShareIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import { useState } from 'react';
 import { toast } from "sonner";
 import Icons from './global/icons';
@@ -18,7 +18,7 @@ interface Props {
 
 const MessageOptions = ({ message, role }: Props) => {
 
-    const { voices, selectedVoice, setVoices, setSelectedVoice } = useVoices();
+    const { voices, selectedVoice } = useVoices();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [copied, setCopied] = useState<boolean>(false);
@@ -35,6 +35,10 @@ const MessageOptions = ({ message, role }: Props) => {
     };
 
     const handleLike = () => {
+        // also handle disLiked state if disLiked already then disable
+        if (disLiked) {
+            setDisLiked(false);
+        }
         if (liked) {
             setLiked(false);
             toast.success("Got it, thanks for letting us know");
@@ -44,7 +48,11 @@ const MessageOptions = ({ message, role }: Props) => {
         }
     };
 
-    const handleDisLike = ()=>{
+    const handleDisLike = () => {
+        // also handle liked state if liked already then disable
+        if (liked) {
+            setLiked(false);
+        }
         if (disLiked) {
             setDisLiked(false);
             toast.success("Got it, thanks for letting us know");
@@ -124,42 +132,48 @@ const MessageOptions = ({ message, role }: Props) => {
                                 Share
                             </TooltipContent>
                         </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    onClick={handleLike}
-                                    className="size-8 rounded-lg"
-                                >
-                                    <ThumbsUpIcon className={cn(
-                                        "size-4 transition-colors duration-300",
-                                        liked ? "fill-foreground" : "text-muted-foreground"
-                                    )} />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                Good response
-                            </TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    onClick={handleDisLike}
-                                    className="size-8 rounded-lg"
-                                >
-                                    <ThumbsUpIcon className={cn(
-                                        "size-4 transition-colors duration-300",
-                                        disLiked ? "fill-foreground" : "text-muted-foreground"
-                                    )} />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                Bad response
-                            </TooltipContent>
-                        </Tooltip>
+                        {(disLiked === false) && (
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        disabled={liked}
+                                        onClick={handleLike}
+                                        className="size-8 rounded-lg"
+                                    >
+                                        <ThumbsUpIcon className={cn(
+                                            "size-4 transition-colors duration-300",
+                                            liked ? "fill-foreground" : "text-muted-foreground"
+                                        )} />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    Good response
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
+                        {(liked === false) && (
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        disabled={disLiked}
+                                        onClick={handleDisLike}
+                                        className="size-8 rounded-lg"
+                                    >
+                                        <ThumbsDownIcon className={cn(
+                                            "size-4 transition-colors duration-300",
+                                            disLiked ? "fill-foreground" : "text-muted-foreground"
+                                        )} />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    Bad response
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
                     </>
                 )}
             </TooltipProvider>

@@ -16,7 +16,6 @@ import { useEffect, useState } from 'react';
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 
-
 interface Props {
     user: User | null;
 }
@@ -52,15 +51,18 @@ const SettingsModal = ({ user }: Props) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent showCloseButton={false} className="flex flex-col w-full md:rounded-2xl sm:max-w-3xl h-96">
+            <DialogContent showCloseButton={false} className="flex flex-col w-full md:rounded-2xl sm:max-w-3xl h-96 p-4">
                 <DialogHeader className="sr-only">
                     <DialogTitle>
                         Settings
                     </DialogTitle>
                 </DialogHeader>
                 <div className="flex items-center justify-between w-full pb-4 border-b border-border">
-                    <h2 className="text-lg font-semibold">
+                    <h2 className="text-lg font-semibold flex items-center gap-2">
                         Settings
+                        <span className="text-sm text-muted-foreground font-normal">
+                            (Beta)
+                        </span>
                     </h2>
                     <Button
                         size="icon"

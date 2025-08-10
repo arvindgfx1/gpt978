@@ -6,8 +6,8 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import { CheckIcon } from 'lucide-react'
 import { FC, memo } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import Icons from './global/icons'
+import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface Props {
     language: string
@@ -69,7 +69,9 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
     return (
         <div className="relative w-full mt-2 mb-4 font-sans rounded-lg codeblock bg-neutral-50">
             <div className="flex items-center justify-between w-full px-4 py-1.5 pr-4 rounded-t-lg bg-neutral-100 text-neutral-900 select-none">
-                <span className="text-xs lowercase">{language}</span>
+                <span className="text-xs lowercase">
+                    {language}
+                </span>
                 <div className="flex items-center">
                     <TooltipProvider delayDuration={0}>
                         <Tooltip>
@@ -96,7 +98,7 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
 
             <SyntaxHighlighter
                 language={language}
-                style={github}
+                style={materialLight}
                 PreTag="div"
                 showLineNumbers={false}
                 customStyle={{
