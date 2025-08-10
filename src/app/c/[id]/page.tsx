@@ -1,8 +1,7 @@
 import { getChatWithMessages } from "@/actions/chat";
 import ChatContainer from "@/components/chat-container";
-import ChatContainer2 from "@/components/test/container2";
 import { createClient } from "@/lib";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 interface Props {
     params: Promise<{

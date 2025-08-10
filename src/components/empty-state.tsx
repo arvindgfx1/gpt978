@@ -1,6 +1,4 @@
 import Container from "@/components/global/container";
-import { PROMPTS } from "@/constants";
-import { createClient } from "@/lib";
 import { capitalizeFirstLetter } from "@/utils";
 import { User } from "@supabase/supabase-js";
 

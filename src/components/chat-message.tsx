@@ -2,10 +2,9 @@
 
 import { Message } from "@/actions";
 import { cn } from "@/utils";
+import Container from "./global/container";
 import Markdown from './markdown';
 import MessageOptions from "./message-options";
-import { motion } from "framer-motion";
-import Container from "./global/container";
 
 interface Props {
     index: number;

@@ -1,43 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'
-import { Slider } from "@/components/ui/slider"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button, buttonVariants } from "./ui/button";
-import { AudioLinesIcon, ChevronDownIcon, ScrollTextIcon, SettingsIcon, ShieldCheckIcon, SunIcon, XIcon, ReceiptIcon, ReceiptTextIcon, CreditCardIcon, CheckIcon, CircleCheckIcon, CircleIcon, ApertureIcon, CameraIcon, CloudUploadIcon } from "lucide-react";
-import { useVoices, useSpeech, useSettings, useIsMobile } from "@/hooks";
-import { useClerk } from "@clerk/nextjs";
-import { toast } from "sonner";
-import Image from "next/image";
-import { useTheme } from "next-themes"
-import { cn } from "@/utils";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { User } from '@supabase/supabase-js';
-import { TABS } from '@/constants';
 import { signOut } from '@/actions';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs";
+import { TABS } from '@/constants';
+import { useIsMobile, useSettings, useSpeech, useVoices } from "@/hooks";
+import { User } from '@supabase/supabase-js';
+import { motion } from "framer-motion";
+import { ChevronDownIcon, XIcon } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from "sonner";
+import { Button } from "./ui/button";
 
 
 interface Props {

@@ -6,13 +6,13 @@ import useEnterSubmit from "@/hooks/use-enter-submit";
 import { useHeight } from "@/hooks/use-height";
 import { useInput } from "@/hooks/use-input";
 import { cn } from "@/utils";
+import { formatFileSize, formatTime } from '@/utils/helpers';
 import { ArrowUpIcon, CheckIcon, Loader2Icon, PlusIcon, XIcon } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import Icons from './global/icons';
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { formatFileSize, formatTime } from '@/utils/helpers';
 
 interface UploadedFile {
     id: string;

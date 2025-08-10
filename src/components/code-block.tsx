@@ -6,7 +6,7 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import { CheckIcon } from 'lucide-react'
 import { FC, memo } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { vsDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
+import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import Icons from './global/icons'
 
 interface Props {
@@ -96,7 +96,7 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
 
             <SyntaxHighlighter
                 language={language}
-                style={vsDark}
+                style={github}
                 PreTag="div"
                 showLineNumbers={false}
                 customStyle={{
