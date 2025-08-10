@@ -273,7 +273,7 @@ export const getChatWithMessages = async (chatId: string): Promise<{ chat: Chat 
     }
 };
 
-export const addMessageToChat = async (chatId: string, content: string, role: 'user' | 'assistant', isSearching : boolean = false) => {
+export const addMessageToChat = async (chatId: string, content: string, role: 'user' | 'assistant', isSearching: boolean = false) => {
     try {
         const supabase = await createClient();
 
@@ -382,9 +382,10 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
                 ## Formatting Rules
                 - Use proper Markdown syntax for all formatting
                 - For code blocks, specify the language after the opening backticks
-                - Use tables for tabular data
+                - Use tables for tabular data (directly as markdown, not in code blocks)
                 - Use headings to structure your response
                 - Use lists (numbered or bulleted) for step-by-step instructions
+                - NEVER put markdown tables inside code blocks
 
                 ## Response Style
                 - Be concise but thorough
@@ -392,9 +393,9 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
                 - Use italics (*text*) for subtle emphasis
                 - Use code blocks with language specification for code examples
                 - Use blockquotes for important notes or warnings
-                - Use tables for comparing items or showing structured data
+                - Use markdown tables (not in code blocks) for comparing items or showing structured data
 
-                ## Code Examples
+                ## Code Examples (use code blocks with language specifier)
                 \`\`\`typescript
                 interface User {
                 id: string;
@@ -403,7 +404,7 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
                 }
                 \`\`\`
 
-                ## Tables
+                ## Tables (direct markdown, no code blocks)
                 | Feature | Description | Status |
                 |---------|-------------|--------|
                 | Markdown | Support for rich text | ✅ |
