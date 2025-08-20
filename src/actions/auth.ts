@@ -13,7 +13,19 @@ export const signInWithGoogle = async () => {
 
         // Check if required environment variables are set
         if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-            throw new Error('Supabase environment variables are not configured. Please check your .env.local file.')
+            const errorMessage = `
+                Supabase environment variables are not configured!
+                
+                Please create a .env.local file in your project root with:
+                
+                NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+                NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+                NEXT_PUBLIC_SITE_URL=http://localhost:3000
+                
+                Get these values from: https://supabase.com/dashboard
+            `.replace(/\s+/g, ' ').trim();
+            
+            throw new Error(errorMessage);
         }
 
         const supabase = await createClient()

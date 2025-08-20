@@ -8,6 +8,7 @@ import { useState } from "react";
 
 const SignUpPage = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [showSetupGuide, setShowSetupGuide] = useState(false);
 
     const handleSignIn = async () => {
         try {
@@ -26,7 +27,8 @@ const SignUpPage = () => {
             // Show more specific error messages
             if (error instanceof Error) {
                 if (error.message.includes('Supabase environment variables are not configured')) {
-                    alert('Configuration Error: Supabase is not configured. Please check your environment variables.');
+                    // Show setup guide instead of alert
+                    setShowSetupGuide(true);
                 } else if (error.message.includes('OAuth failed')) {
                     alert('OAuth Error: ' + error.message);
                 } else {
@@ -39,6 +41,36 @@ const SignUpPage = () => {
             setIsLoading(false);
         }
     };
+
+    if (showSetupGuide) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="flex flex-col items-center justify-center gap-y-4 text-center w-full max-w-2xl mx-auto p-6">
+                    <h2 className="text-2xl font-semibold text-red-600">
+                        Configuration Required! ⚠️
+                    </h2>
+                    <div className="bg-muted p-4 rounded-lg text-left w-full">
+                        <h3 className="font-semibold mb-2">To use Google OAuth, you need to:</h3>
+                        <ol className="list-decimal list-inside space-y-2 text-sm">
+                            <li>Create a <code className="bg-background px-2 py-1 rounded">.env.local</code> file in your project root</li>
+                            <li>Add your Supabase credentials:</li>
+                        </ol>
+                        <pre className="bg-background p-3 rounded mt-3 text-xs overflow-x-auto">
+{`NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+NEXT_PUBLIC_SITE_URL=http://localhost:3000`}
+                        </pre>
+                        <p className="mt-3 text-sm">
+                            Get these values from: <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Supabase Dashboard</a>
+                        </p>
+                    </div>
+                    <Button onClick={() => setShowSetupGuide(false)} variant="outline">
+                        Back to Sign Up
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex items-center justify-center h-screen">
