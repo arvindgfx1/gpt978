@@ -33,10 +33,15 @@ export default async function RootLayout({
         user = userData;
         chats = await getUserChats();
     } catch (error) {
-        console.warn('Supabase not configured during build:', error);
-        // Provide fallback values during build time
+        console.warn('Supabase not configured or failed during build:', error);
+        // Provide fallback values during build time or when Supabase is not configured
         user = null;
         chats = [];
+        
+        // Log the specific error for debugging
+        if (error instanceof Error) {
+            console.warn('Error details:', error.message);
+        }
     }
 
     return (
