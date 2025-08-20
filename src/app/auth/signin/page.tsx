@@ -4,14 +4,27 @@ import { signInWithGoogle } from "@/actions/auth";
 import Icons from "@/components/global/icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useState } from "react";
 
 const SignInPage = () => {
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSignIn = async () => {
         try {
-            await signInWithGoogle();
+            setIsLoading(true);
+            const result = await signInWithGoogle();
+            
+            if (result && result.url) {
+                // Redirect to the OAuth URL
+                window.location.href = result.url;
+            } else {
+                throw new Error('No OAuth URL received');
+            }
         } catch (error) {
-            console.error('Unexpected error during sign in:', error);
+            console.error('Error during Google sign in:', error);
+            alert('Failed to sign in with Google. Please try again.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -32,11 +45,12 @@ const SignInPage = () => {
                 </p>
                 <Button
                     type="button"
-                    onClick={() => handleSignIn()}
+                    onClick={handleSignIn}
+                    disabled={isLoading}
                     className="w-full"
                 >
                     <Icons.google className="w-4 h-4 mr-2" />
-                    Sign in with Google
+                    {isLoading ? 'Signing in...' : 'Sign in with Google'}
                 </Button>
                 <p className="text-sm text-muted-foreground mt-">
                     New to Browzai?{" "}
