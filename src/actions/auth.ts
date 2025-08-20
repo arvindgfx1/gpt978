@@ -5,7 +5,19 @@ import { redirect } from "next/navigation";
 
 export const signInWithGoogle = async () => {
     try {
+        console.log('Environment variables check:')
+        console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Not set')
+        console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not set')
+        console.log('NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL)
+        console.log('NEXT_SITE_URL:', process.env.NEXT_SITE_URL)
+
+        // Check if required environment variables are set
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+            throw new Error('Supabase environment variables are not configured. Please check your .env.local file.')
+        }
+
         const supabase = await createClient()
+        console.log('Supabase client created successfully')
 
         // Use environment variable or fallback to localhost for development
         const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_SITE_URL || 'http://localhost:3000'
@@ -19,6 +31,8 @@ export const signInWithGoogle = async () => {
                 redirectTo: auth_callback_url,
             },
         })
+
+        console.log('OAuth response:', { data, error })
 
         if (error) {
             console.error("Google OAuth error:", error)

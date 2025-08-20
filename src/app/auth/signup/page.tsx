@@ -22,7 +22,19 @@ const SignUpPage = () => {
             }
         } catch (error) {
             console.error('Error during Google sign in:', error);
-            alert('Failed to sign in with Google. Please try again.');
+            
+            // Show more specific error messages
+            if (error instanceof Error) {
+                if (error.message.includes('Supabase environment variables are not configured')) {
+                    alert('Configuration Error: Supabase is not configured. Please check your environment variables.');
+                } else if (error.message.includes('OAuth failed')) {
+                    alert('OAuth Error: ' + error.message);
+                } else {
+                    alert('Authentication Error: ' + error.message);
+                }
+            } else {
+                alert('Failed to sign in with Google. Please try again.');
+            }
         } finally {
             setIsLoading(false);
         }
