@@ -3,15 +3,7 @@ import { cookies } from 'next/headers'
 
 export async function createClient() {
     try {
-        let cookieStore;
-        try {
-            cookieStore = await cookies()
-        } catch (cookieError) {
-            console.warn('Failed to get cookies, using fallback:', cookieError);
-            // Return a mock client that won't work but won't crash
-            throw new Error('Cookies not available in this environment');
-        }
-        
+        // First check environment variables
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
         
@@ -19,7 +11,18 @@ export async function createClient() {
             throw new Error('Supabase environment variables are not configured');
         }
 
-        return createServerClient(
+        // Try to get cookies, but handle failures gracefully
+        let cookieStore;
+        try {
+            cookieStore = await cookies()
+        } catch (cookieError) {
+            console.warn('Failed to get cookies, this might be a build-time issue:', cookieError);
+            // Return a mock client that won't work but won't crash
+            throw new Error('Cookies not available in this environment - likely build time');
+        }
+        
+        // Create the Supabase client
+        const client = createServerClient(
             supabaseUrl,
             supabaseAnonKey,
             {
@@ -47,8 +50,22 @@ export async function createClient() {
                 },
             }
         )
+
+        return client;
     } catch (error) {
         console.error('Failed to create Supabase client:', error);
-        throw new Error(`Failed to create Supabase client: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        
+        // Provide a more specific error message
+        if (error instanceof Error) {
+            if (error.message.includes('Cookies not available')) {
+                throw new Error('Server environment not compatible - try building or deploying');
+            } else if (error.message.includes('environment variables')) {
+                throw new Error('Supabase not configured - check your .env.local file');
+            } else {
+                throw new Error(`Supabase client creation failed: ${error.message}`);
+            }
+        } else {
+            throw new Error('Unknown error creating Supabase client');
+        }
     }
 };

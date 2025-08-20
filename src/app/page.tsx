@@ -9,6 +9,7 @@ import Link from "next/link";
 const Home = async () => {
 
     let user = null;
+    let hasSupabaseError = false;
 
     try {
         const supabase = await createClient();
@@ -18,6 +19,12 @@ const Home = async () => {
         console.warn('Supabase not configured during build:', error);
         // Provide fallback values during build time
         user = null;
+        hasSupabaseError = true;
+        
+        // Log specific error details
+        if (error instanceof Error) {
+            console.warn('Error details:', error.message);
+        }
     }
 
     if (user) {
@@ -50,6 +57,15 @@ const Home = async () => {
                         Start creating
                         <ArrowRightIcon className="w-4 h-4 ml-1.5" />
                     </Link>
+                    
+                    {/* Show configuration warning if Supabase is not available */}
+                    {hasSupabaseError && (
+                        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-md">
+                            <p className="text-sm text-yellow-800 text-center">
+                                ⚠️ Supabase not configured. Some features may not work until you set up your environment variables.
+                            </p>
+                        </div>
+                    )}
                 </div>
             </Container>
         </div>
