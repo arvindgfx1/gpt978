@@ -5,7 +5,7 @@ import { cn } from "@/utils";
 import { User } from "@supabase/supabase-js";
 
 interface Props {
-    user: User;
+    user: User | null;
     children: React.ReactNode;
 }
 

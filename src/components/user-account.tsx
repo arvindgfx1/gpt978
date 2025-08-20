@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-const UserAccount = ({ user }: { user: User }) => {
+const UserAccount = ({ user }: { user: User | null }) => {
 
     const router = useRouter();
 

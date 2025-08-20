@@ -12,7 +12,7 @@ import { User } from "@supabase/supabase-js";
 import { useSidebar } from "@/hooks";
 
 interface Props {
-    user: User
+    user: User | null
 }
 
 const DesktopHeader = ({ user }: Props) => {

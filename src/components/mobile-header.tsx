@@ -8,7 +8,7 @@ import { buttonVariants } from "./ui/button";
 import UserAccount from "./user-account";
 
 interface Props {
-    user: User;
+    user: User | null;
     chats: Chat[];
 }
 
