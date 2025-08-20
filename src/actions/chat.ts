@@ -1,10 +1,10 @@
 "use server";
 
-import { createClient, google } from "@/lib";
+import { createClient, openai } from "@/lib";
 import { generateText } from "ai";
 import { revalidatePath } from "next/cache";
 
-export type Model = "models/gemini-1.5-pro-latest" | "llama3-8b-8192";
+export type Model = "gpt-4o" | "claude-3-5-sonnet-20241022" | "deepseek-r1";
 
 export type Message = {
     id: string;
@@ -36,7 +36,7 @@ export const continueConversation = async (messages: Message[], model: Model, te
     //     };
     // }
 
-    // const provider = model === "models/gemini-1.5-pro-latest" ? google : groq;
+    // const provider = openai;
 
     // const instructions = user?.instructions || "";
 
@@ -74,7 +74,7 @@ export const continueConversation = async (messages: Message[], model: Model, te
     // };
 };
 
-export const createNewChat = async (firstMessage: string): Promise<{ chatId: string; aiMessage: string }> => {
+export const createNewChat = async (firstMessage: string): Promise<{ chatId: string }> => {
     try {
         const supabase = await createClient();
 
@@ -113,28 +113,11 @@ export const createNewChat = async (firstMessage: string): Promise<{ chatId: str
             throw new Error(`Failed to save message: ${messageError.message}`);
         }
 
-        const aiResponse = await generateAIResponse([userMessage], firstMessage, user.user_metadata.instructions);
-
-        const { data: aiMessage, error: aiMessageError } = await supabase
-            .from('messages')
-            .insert({
-                chat_id: chat.id,
-                content: aiResponse,
-                role: 'assistant'
-            })
-            .select()
-            .single();
-
-        if (aiMessageError) {
-            throw new Error(`Failed to save message: ${aiMessageError.message}`);
-        }
-
         revalidatePath(`/c/${chat.id}`);
         revalidatePath("/");
 
         return {
             chatId: chat.id,
-            aiMessage: aiResponse,
         }
     } catch (error) {
         console.error('Error creating chat:', error);
@@ -313,22 +296,9 @@ export const addMessageToChat = async (chatId: string, content: string, role: 'u
             .update({ updated_at: new Date().toISOString() })
             .eq('id', chatId);
 
-        const messages = await getChatMessages(chatId);
-        const aiResponse = await generateAIResponse(messages, content, user.user_metadata.instructions);
-
-        const { data: aiMessage, error: aiMessageError } = await supabase
-            .from('messages')
-            .insert({
-                chat_id: chatId,
-                content: aiResponse,
-                role: 'assistant'
-            })
-            .select()
-            .single();
-
-        if (aiMessageError) {
-            throw new Error(`Failed to save message: ${aiMessageError.message}`);
-        }
+        // Streaming path now handled by client via /api/chat/stream.
+        // We only return user's saved message; client will persist assistant message after stream completes.
+        const aiMessage = null as unknown as { id: string } | null;
 
         revalidatePath(`/c/${chatId}`);
 
@@ -338,6 +308,43 @@ export const addMessageToChat = async (chatId: string, content: string, role: 'u
         throw error;
     }
 };
+
+export const saveAssistantMessage = async (
+    chatId: string,
+    content: string,
+) => {
+    try {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error('Not authenticated');
+
+        const { data: chat, error: chatError } = await supabase
+            .from('chats')
+            .select('id')
+            .eq('id', chatId)
+            .eq('user_id', user.id)
+            .single();
+        if (chatError || !chat) throw new Error('Chat not found or access denied');
+
+        const { data: aiMessage, error: aiMessageError } = await supabase
+            .from('messages')
+            .insert({ chat_id: chatId, content, role: 'assistant' })
+            .select()
+            .single();
+        if (aiMessageError) throw new Error(`Failed to save message: ${aiMessageError.message}`);
+
+        await supabase
+            .from('chats')
+            .update({ updated_at: new Date().toISOString() })
+            .eq('id', chatId);
+
+        revalidatePath(`/c/${chatId}`);
+        return aiMessage;
+    } catch (error) {
+        console.error('Error saving assistant message:', error);
+        throw error;
+    }
+}
 
 const getChatMessages = async (chatId: string): Promise<Message[]> => {
     const supabase = await createClient();
@@ -357,7 +364,7 @@ const getChatMessages = async (chatId: string): Promise<Message[]> => {
 
 export const generateAIResponse = async (messages: Message[], userMessage: string, instructions?: string, enableWebSearch: boolean = false): Promise<string> => {
     try {
-        const model = "gemini-2.0-flash";
+        const model: Model = "gpt-4o";
 
         const formattedMessages = messages.map(msg => ({
             role: msg.role as 'user' | 'assistant',
@@ -374,7 +381,7 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
         } : undefined;
 
         const { text } = await generateText({
-            model: google(model),
+            model: openai(model),
             messages: formattedMessages,
             temperature: 0.7,
             system: `You are a helpful AI assistant that provides well-formatted responses using Markdown. ${instructions ? `Here are user instructions keep them in mind: ${instructions}` : ''} Follow these guidelines:
@@ -448,7 +455,7 @@ const searchWeb = async (query: string): Promise<Array<{ title: string; link: st
 const generateTitle = async (message: string): Promise<string> => {
     try {
         const { text } = await generateText({
-            model: google('gemini-2.0-flash'),
+            model: openai('gpt-4o'),
             prompt: message,
             system: `\n
             - you will generate a short title based on the first message a user begins a conversation with

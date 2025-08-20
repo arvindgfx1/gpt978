@@ -35,7 +35,7 @@ const Home = async () => {
                         The intelligent AI companion
                     </h1>
                     <p className="w-full mt-4 text-center text-muted-foreground text-balance">
-                        Aether is your creative companion, effortlessly generating content, diagrams, and images
+                        Browzai is your creative companion, effortlessly generating content, diagrams, and images
                     </p>
                     <Link href="/auth/signin" className={buttonVariants({ className: "mt-6" })}>
                         Start creating

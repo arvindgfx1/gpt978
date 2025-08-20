@@ -22,7 +22,7 @@ const SignInPage = () => {
                     Hello there! 👋
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                    By proceeding, you are creating an Aether account and agreeing to our{" "}
+                    By proceeding, you are creating a Browzai account and agreeing to our{" "}
                     <Link href="#" className="text-foreground">
                         Terms of Service
                     </Link>{" "}
@@ -39,7 +39,7 @@ const SignInPage = () => {
                     Sign in with Google
                 </Button>
                 <p className="text-sm text-muted-foreground mt-">
-                    New to Aether?{" "}
+                    New to Browzai?{" "}
                     <Link href="/auth/signup" className="text-foreground">
                         Sign up
                     </Link>

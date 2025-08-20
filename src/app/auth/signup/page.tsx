@@ -19,10 +19,10 @@ const SignUpPage = () => {
         <div className="flex items-center justify-center h-screen">
             <div className="flex flex-col items-center justify-center gap-y-3 text-center w-full max-w-xs mx-auto">
                 <h2 className="text-2xl font-semibold">
-                    Sign Up for Aether! ✨
+                    Sign Up for Browzai! ✨
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                    By proceeding, you are creating a Aether account and agreeing to our{" "}
+                    By proceeding, you are creating a Browzai account and agreeing to our{" "}
                     <Link href="#" className="text-foreground">
                         Terms of Service
                     </Link>{" "}

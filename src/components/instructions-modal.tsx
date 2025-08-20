@@ -123,7 +123,7 @@ const InstructionsModal = ({ user }: Props) => {
                             </HoverCard>
                         </div>
                         <p className="mt-2 text-sm text-foreground/80">
-                            How would you like Aether to respond and interact with you?
+                            How would you like Browzai to respond and interact with you?
                         </p>
                         <Textarea
                             value={text}
