@@ -11,6 +11,11 @@ export async function createClient() {
             throw new Error('Supabase environment variables are not configured');
         }
 
+        // Validate environment variables format
+        if (!supabaseUrl.startsWith('https://') || !supabaseAnonKey.startsWith('eyJ')) {
+            throw new Error('Invalid Supabase environment variable format');
+        }
+
         // Try to get cookies, but handle failures gracefully
         let cookieStore;
         try {
@@ -61,6 +66,8 @@ export async function createClient() {
                 throw new Error('Server environment not compatible - try building or deploying');
             } else if (error.message.includes('environment variables')) {
                 throw new Error('Supabase not configured - check your .env.local file');
+            } else if (error.message.includes('Invalid Supabase')) {
+                throw new Error('Invalid Supabase credentials - check your .env.local file');
             } else {
                 throw new Error(`Supabase client creation failed: ${error.message}`);
             }

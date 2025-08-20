@@ -11,21 +11,32 @@ const Home = async () => {
     let user = null;
     let hasSupabaseError = false;
 
+    // Completely wrap everything in error handling
     try {
-        const supabase = await createClient();
-        const { data: { user: userData } } = await supabase.auth.getUser();
-        user = userData;
-    } catch (error) {
-        console.warn('Supabase not configured during build:', error);
-        // Provide fallback values during build time
-        user = null;
-        hasSupabaseError = true;
-        
-        // Log specific error details
-        if (error instanceof Error) {
-            console.warn('Error details:', error.message);
+        // Only try to create Supabase client if environment variables are available
+        if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+            try {
+                const supabase = await createClient();
+                const { data: { user: userData } } = await supabase.auth.getUser();
+                user = userData;
+            } catch (supabaseError) {
+                console.warn('Supabase client creation failed:', supabaseError);
+                hasSupabaseError = true;
+                user = null;
+            }
+        } else {
+            console.warn('Supabase environment variables not configured');
+            hasSupabaseError = true;
+            user = null;
         }
+    } catch (error) {
+        console.warn('Unexpected error in home page:', error);
+        hasSupabaseError = true;
+        user = null;
     }
+
+    // Ensure we always have safe values
+    if (!user) user = null;
 
     if (user) {
         return (
