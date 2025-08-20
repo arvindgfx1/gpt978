@@ -33,7 +33,7 @@ const MobileHeader = ({ user, chats }: Props) => {
                     {user ? (
                         <UserAccount user={user} />
                     ) : (
-                        <Link href="/signin" className={buttonVariants({ size: "sm" })}>
+                        <Link href="/auth/signin" className={buttonVariants({ size: "sm" })}>
                             <span className="text-sm font-medium">
                                 Sign Up
                             </span>

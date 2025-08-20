@@ -85,10 +85,10 @@ const DesktopHeader = ({ user }: Props) => {
                             </>
                         ) : (
                             <>
-                                <Link href="/signin" className={buttonVariants({ size: "sm", variant: "outline" })}>
+                                <Link href="/auth/signin" className={buttonVariants({ size: "sm", variant: "outline" })}>
                                     Log in
                                 </Link>
-                                <Link href="/signin" className={buttonVariants({ size: "sm", })}>
+                                <Link href="/auth/signin" className={buttonVariants({ size: "sm", })}>
                                     Sign Up
                                 </Link>
                             </>
