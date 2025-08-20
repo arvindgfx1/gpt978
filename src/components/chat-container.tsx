@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import ChatWrapper from "./chat-wrapper";
 
 interface Props {
-    user: User;
+    user: User | null;
     chatId?: string;
     messages: Message[] | [];
 }
@@ -21,6 +21,11 @@ const ChatContainer = ({ user, chatId, messages }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
     const [oMessages, setOMessages] = useState<Message[]>([]);
+
+    // Don't render if user is null
+    if (!user) {
+        return null;
+    }
 
     const handleSendMessage = async (message: string) => {
         setIsLoading(true);

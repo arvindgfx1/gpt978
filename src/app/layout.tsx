@@ -24,10 +24,20 @@ export default async function RootLayout({
     children: React.ReactNode;
 }>) {
 
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    let user = null;
+    let chats: any[] = [];
 
-    const chats = await getUserChats();
+    try {
+        const supabase = await createClient();
+        const { data: { user: userData } } = await supabase.auth.getUser();
+        user = userData;
+        chats = await getUserChats();
+    } catch (error) {
+        console.warn('Supabase not configured during build:', error);
+        // Provide fallback values during build time
+        user = null;
+        chats = [];
+    }
 
     return (
         <html lang="en">
@@ -39,13 +49,13 @@ export default async function RootLayout({
             >
                 <Providers>
                     <SearchModal chats={chats} />
-                    <SettingsModal user={user!} />
-                    <InstructionsModal user={user!} />
-                    <DesktopHeader user={user!} />
-                    <MobileHeader user={user!} chats={chats} />
+                    <SettingsModal user={user} />
+                    <InstructionsModal user={user} />
+                    <DesktopHeader user={user} />
+                    <MobileHeader user={user} chats={chats} />
                     <div className="relative flex grow h-dvh w-full mx-auto overflow-auto -14 z-0">
-                        <DesktopSidebar user={user!} chats={chats} />
-                        <MainWrapper user={user!}>
+                        <DesktopSidebar user={user} chats={chats} />
+                        <MainWrapper user={user}>
                             {children}
                         </MainWrapper>
                     </div>

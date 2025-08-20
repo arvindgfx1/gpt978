@@ -8,8 +8,17 @@ import Link from "next/link";
 
 const Home = async () => {
 
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    let user = null;
+
+    try {
+        const supabase = await createClient();
+        const { data: { user: userData } } = await supabase.auth.getUser();
+        user = userData;
+    } catch (error) {
+        console.warn('Supabase not configured during build:', error);
+        // Provide fallback values during build time
+        user = null;
+    }
 
     if (user) {
         return (

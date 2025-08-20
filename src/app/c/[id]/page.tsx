@@ -17,15 +17,25 @@ const ChatIdPage = async ({ params }: Props) => {
         notFound();
     }
 
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    let user = null;
+    let messages: any[] = [];
 
-    const chats = await getChatWithMessages(id);
-    const messages = chats.messages || [];
+    try {
+        const supabase = await createClient();
+        const { data: { user: userData } } = await supabase.auth.getUser();
+        user = userData;
+        const chats = await getChatWithMessages(id);
+        messages = chats.messages || [];
+    } catch (error) {
+        console.warn('Supabase not configured during build:', error);
+        // Provide fallback values during build time
+        user = null;
+        messages = [];
+    }
 
     return (
         <div className="w-full h-full">
-            <ChatContainer user={user!} chatId={id} messages={messages} />
+            <ChatContainer user={user} chatId={id} messages={messages} />
         </div>
     )
 };
